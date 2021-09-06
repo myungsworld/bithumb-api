@@ -1,4 +1,4 @@
-package API
+package Info
 
 import (
 	"encoding/json"

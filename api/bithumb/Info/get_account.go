@@ -1,4 +1,4 @@
-package API
+package Info
 
 import (
 	"crypto/hmac"
@@ -41,7 +41,7 @@ type Account struct {
 	Data   AccountRec `json:"data"`
 }
 
-func GetAccount(orderCurrency , paymentCurrency string) {
+func GetMyTickerBalance(orderCurrency , paymentCurrency string) {
 
 	const ENDPOINT = "/info/account"
 	const PARAMS = "order_currency=BTC&payment_currency=KRW"

@@ -1,4 +1,4 @@
-package API
+package Info
 
 import (
 	"encoding/json"
@@ -24,7 +24,7 @@ type Coin struct {
 	}
 }
 
-func GetCoin(ticker string) {
+func CoinMarketCondition(ticker string) {
 
 	reqURL := fmt.Sprintf("https://api.bithumb.com/public/ticker/%s_KRW",ticker)
 
