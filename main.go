@@ -1,6 +1,6 @@
 package main
 
-import Execute "myungsworld/api/bithumb/transaction"
+import "myungsworld/api/bithumb/Info"
 
 func main() {
 
@@ -15,5 +15,6 @@ func main() {
 	//Execute.BuyHook("BTT","5000","5")
 	//Execute.SellHook("BTT","500","6")
 	//Execute.MarKetBuy("BTT","2")
-	Execute.MarketSell("BTT","1")
+	//Execute.MarketSell("BTT","1")
+	Info.CandleStick("BTT","24h")
 }
