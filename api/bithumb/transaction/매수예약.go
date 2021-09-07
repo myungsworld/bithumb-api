@@ -13,7 +13,7 @@ type Buying struct {
 }
 
 
-func Buy(ticker string, units string, price string) {
+func BuyHook(ticker string, units string, price string) {
 	const ENDPOINT = "/trade/place"
 	const PARAMS = "order_currency=주문통화&payment_currency=결제통화&units=주문수량(최대 50억 최소 500원)&price=거래가&type=거래유형(bid매수)"
 

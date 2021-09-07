@@ -1,0 +1,34 @@
+package Execute
+
+import (
+	"encoding/json"
+	"fmt"
+	Middlewares "myungsworld/middlewares"
+)
+
+type MarketSelling struct {
+	Status  string `json:"status"`
+	OrderId string `json:"order_id"`
+	Message string `json:"message"`
+}
+
+func MarketSell(ticker, EA string) {
+	const ENDPOINT = "/trade/market_sell"
+	const PARAMS = "order_currency=주문통화&payment_currency=KRW&units=코인갯수"
+
+	params := fmt.Sprintf("order_currency=%s&payment_currency=KRW&units=%s", ticker, EA)
+	respData := Middlewares.Call(ENDPOINT, params)
+
+	marketSelling := MarketSelling{}
+	if err := json.Unmarshal(respData,&marketSelling); err != nil {
+		panic(err)
+	}
+
+	if marketSelling.Status == "0000" {
+		fmt.Printf("%s 코인 %s개 시장가로 매도 체결\n", ticker, EA)
+	} else {
+		fmt.Println("-------시장가 매도 실패-------")
+		fmt.Printf("Status Code : %s \n%s\n", marketSelling.Status, marketSelling.Message)
+	}
+
+}

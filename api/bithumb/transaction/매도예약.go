@@ -12,7 +12,7 @@ type Selling struct {
 	Message string `json:"message"`
 }
 
-func Sell(ticker string , units string, price string) {
+func SellHook(ticker string , units string, price string) {
 	const ENDPOINT = "/trade/place"
 	params := fmt.Sprintf("order_currency=%s&payment_currency=KRW&units=%s&price=%s&type=ask",ticker,units,price)
 
@@ -22,5 +22,16 @@ func Sell(ticker string , units string, price string) {
 	if err := json.Unmarshal(respData, &selling); err != nil {
 		panic(err)
 	}
-	fmt.Println(selling)
+
+	if selling.Status == "0000" {
+		fmt.Println("----------매도 예약 API 성공-----------")
+		fmt.Println("매도예약 체결")
+		fmt.Printf("%s 토큰 %s원에 %s원 매도예약\n",ticker,price,units	)
+	} else {
+		fmt.Println("----------매도 예약 API 실패------------")
+		fmt.Printf("매도예약 실패\n")
+		fmt.Printf("StatusCode : %s\n", selling.Status)
+		fmt.Printf("Message : %s\n", selling.Message)
+	}
+
 }

@@ -16,7 +16,7 @@ import (
 
 const URL = "https://api.bithumb.com"
 
-func microsectime() int64 {
+func microSecTime() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
 }
 
@@ -39,7 +39,7 @@ func Call(endPoint, params string) (data []byte) {
 	params += "&endpoint=" + eEndPoint
 
 	hmacKey := secretKey
-	nonceInt64 := microsectime()
+	nonceInt64 := microSecTime()
 	apiNonce := fmt.Sprint(nonceInt64)
 
 	hmacData := endPoint + string(0) + params + string(0) + apiNonce

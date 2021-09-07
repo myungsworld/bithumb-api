@@ -35,7 +35,6 @@ func PendingOrder(ticker string) {
 	if err := json.Unmarshal(respData, &orders); err != nil {
 		panic(err)
 	}
-
 	fmt.Println(orders)
 
 }
