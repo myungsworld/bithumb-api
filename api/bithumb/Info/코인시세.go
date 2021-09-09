@@ -24,7 +24,7 @@ type Coin struct {
 	}
 }
 
-func CoinMarketCondition(ticker string) {
+func CoinMarketCondition(ticker string) string {
 
 	reqURL := fmt.Sprintf("https://api.bithumb.com/public/ticker/%s_KRW",ticker)
 
@@ -41,17 +41,19 @@ func CoinMarketCondition(ticker string) {
 	defer resp.Body.Close()
 
 	bytes, _ := ioutil.ReadAll(resp.Body)
-	fmt.Println("string(bytes) : ", string(bytes))
+	//fmt.Println("string(bytes) : ", string(bytes))
 	var coin Coin
 	if err := json.Unmarshal(bytes, &coin); err != nil {
 		panic(err)
 	}
-	fmt.Printf("Ticker : %s\n", ticker)
-	fmt.Printf("당일 시작가 : %s\n", coin.Data.OpeningPrice)
-	fmt.Printf("현재가 : %s\n", coin.Data.ClosingPrice)
-	fmt.Printf("당일 최고점 : %s\n", coin.Data.MaxPrice)
-	fmt.Printf("당일 최저점 : %s\n", coin.Data.MinPrice)
-	fmt.Printf("최근 24시간 변동가 : %s\n",coin.Data.Fluctate24H)
-	fmt.Printf("최근 24시간 변동 퍼센트 : %s\n",coin.Data.FluctateRate24H)
+	//fmt.Printf("Ticker : %s\n", ticker)
+	//fmt.Printf("당일 시작가 : %s\n", coin.Data.OpeningPrice)
+	//fmt.Printf("현재가 : %s\n", coin.Data.ClosingPrice)
+	//fmt.Printf("당일 최고점 : %s\n", coin.Data.MaxPrice)
+	//fmt.Printf("당일 최저점 : %s\n", coin.Data.MinPrice)
+	//fmt.Printf("최근 24시간 변동가 : %s\n",coin.Data.Fluctate24H)
+	//fmt.Printf("최근 24시간 변동 퍼센트 : %s\n",coin.Data.FluctateRate24H)
+
+	return coin.Data.ClosingPrice
 
 }

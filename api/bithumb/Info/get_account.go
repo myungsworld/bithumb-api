@@ -41,12 +41,12 @@ type Account struct {
 	Data   AccountRec `json:"data"`
 }
 
-func GetMyTickerBalance(orderCurrency , paymentCurrency string) {
+func GetMyTickerBalance(orderCurrency string) {
 
 	const ENDPOINT = "/info/account"
 	const PARAMS = "order_currency=BTC&payment_currency=KRW"
 
-	params := fmt.Sprintf("order_currency=%s&payment_currency=%s",orderCurrency,paymentCurrency)
+	params := fmt.Sprintf("order_currency=%s&payment_currency=KRW",orderCurrency)
 
 	respData := Middlewares.Call(ENDPOINT, params)
 	accountJsonRecInfo := Account{}
