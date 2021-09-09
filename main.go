@@ -1,7 +1,7 @@
 package main
 
 import (
-	Execute "myungsworld/api/bithumb/transaction"
+	"myungsworld/api/bithumb/Info"
 	"myungsworld/database"
 )
 
@@ -9,7 +9,9 @@ func main() {
 
 	database.ConnectDB()
 
-	//Info.CoinMarketCondition("BTT")
+	Info.CoinMarketCondition("BTT")
+
+
 	//Info.GetMyTickerBalance("BTT","KRW")
 	//Info.GetBalance("ALL")
 	//Info.GetBalance("BTT")
@@ -21,5 +23,5 @@ func main() {
 	//Execute.MarKetBuy("BTT","2")
 	//Execute.MarketSell("BTT","1")
 	//Info.CandleStick("BTT","24h")
-	Execute.MarketBuyHook("BTT","4","4","1500")
+	//Execute.MarketBuyHook("BTT","4","4","1500")
 }
