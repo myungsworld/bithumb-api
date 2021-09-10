@@ -8,106 +8,73 @@ import (
 	"time"
 )
 
-
 func main() {
-
 
 	database.ConnectDB()
 
 	done := make(chan bool, 100)
 
+	var transaction int
+	var seconds int
+	var startPriceEveryTenMin float64
+	var marketPrice float64
+	var highPrice float64
+
 	go func() {
 
-		var startPriceEveryTenMin float64
-		var marketPrice float64
-		var highPrice float64
-
-		BTTMarketPrice := Info.CoinMarketCondition("BTT")
-		startPriceEveryTenMin, _ = strconv.ParseFloat(BTTMarketPrice, 64)
-
-		var price float64
 		for true {
-			time.Sleep(time.Second * 1)
-			fmt.Println("BTT 매수타임 호시탐탐 검색중")
 
 			BTTMarketPrice := Info.CoinMarketCondition("BTT")
-			fmt.Println("현재가 BTT :", BTTMarketPrice)
-			price, _ = strconv.ParseFloat(BTTMarketPrice, 64)
-			fmt.Println("price: ", price)
+			startPriceEveryTenMin, _ = strconv.ParseFloat(BTTMarketPrice, 64)
 
+			for true {
+				time.Sleep(time.Second * 1)
 
-			marketPrice = price
-			if marketPrice > highPrice {
-				highPrice = marketPrice
-			}
+				// 30분 주기로 초기화
+				seconds++
+				if seconds == 20 {
+					transaction = 0
+					seconds = 0
+					startPriceEveryTenMin = 0
+					marketPrice = 0
+					highPrice = 0
+					break
+				}
 
+				fmt.Println("BTT 매수타임 호시탐탐 검색중")
 
-		 	fmt.Println("시작가 :",startPriceEveryTenMin,"현재가 :",marketPrice,"고가 :",highPrice)
+				BTTMarketPrice := Info.CoinMarketCondition("BTT")
+				marketPrice, _ = strconv.ParseFloat(BTTMarketPrice, 64)
+				fmt.Println("marketPrice: ", marketPrice)
 
-			// 10분안에 -7% 이상 떨어지면 50퍼 매도
-			fluctateRate := ((marketPrice - startPriceEveryTenMin)/marketPrice)*100
-			fmt.Println(fluctateRate)
+				if marketPrice > highPrice {
+					highPrice = marketPrice
+				}
 
+				fluctateRate := ((marketPrice - startPriceEveryTenMin) / marketPrice) * 100
 
-			if BTTMarketPrice < "4" {
-				done <- true
+				fmt.Println("시작가 :", startPriceEveryTenMin, "현재가 :", marketPrice, "고가 :", highPrice)
+				fmt.Println("변동률:", fluctateRate)
+				fmt.Println(seconds,"초")
 
+				// 30분안에 -7% 이상 떨어지면 50퍼 매도 + 시작가 변경
+				if transaction == 0 && fluctateRate < -7 {
+					transaction++
+					done <- true
+				}
+
+				if BTTMarketPrice < "4" {
+					done <- true
+
+				}
 			}
 		}
 	}()
 
-	//go func () {
-	//	var priceArr [2]float64
-	//	var price float64
-	//
-	//	for true {
-	//		// 10분마다 초기화
-	//		var tenMin int
-	//
-	//
-	//		for true {
-	//
-	//			// 10분마다 초기화
-	//			tenMin++
-	//			//fmt.Println("tenMin : " ,tenMin)
-	//			if tenMin == 600 {
-	//				priceArr[0] = 0
-	//				priceArr[1] = 0
-	//				price = 0
-	//				break
-	//			}
-	//
-	//			time.Sleep(time.Second*1)
-	//			fmt.Println("BTT 매수타임 호시탐탐 검색중")
-	//
-	//			BTTMarketPrice := Info.CoinMarketCondition("BTT")
-	//			fmt.Println("현재가 BTT :", BTTMarketPrice)
-	//			price , _ = strconv.ParseFloat(BTTMarketPrice,64)
-	//			fmt.Println("price: ", price)
-	//
-	//			// 10분마다 고가를 기록
-	//			priceArr[0] = price
-	//			if priceArr[0] > priceArr[1] {
-	//				priceArr[1] = priceArr[0]
-	//			}
-	//
-	//			fmt.Println(priceArr)
-	//
-	//			if BTTMarketPrice < "4" {
-	//				done <- true
-	//
-	//			}
-	//		}
-	//	}
-	//
-	//}()
-
-
-	for i := 0 ; i < 3 ; i++ {
+	for i := 0; i < 3; i++ {
 		<-done
 		fmt.Println("아항")
 	}
-
 
 	//Info.GetBalance("ALL")
 	//Info.GetMyTickerBalance("BTT","KRW")
