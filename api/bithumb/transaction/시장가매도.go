@@ -12,11 +12,13 @@ type MarketSelling struct {
 	Message string `json:"message"`
 }
 
-func MarketSell(ticker, EA string) {
+func MarketSell(ticker string, EA float64) {
 	const ENDPOINT = "/trade/market_sell"
 	const PARAMS = "order_currency=주문통화&payment_currency=KRW&units=코인갯수"
 
-	params := fmt.Sprintf("order_currency=%s&payment_currency=KRW&units=%s", ticker, EA)
+	each := fmt.Sprintf("%.4f", EA)
+
+	params := fmt.Sprintf("order_currency=%s&payment_currency=KRW&units=%s", ticker, each)
 	respData := Middlewares.Call(ENDPOINT, params)
 
 	marketSelling := MarketSelling{}
@@ -25,7 +27,7 @@ func MarketSell(ticker, EA string) {
 	}
 
 	if marketSelling.Status == "0000" {
-		fmt.Printf("%s 코인 %s개 시장가로 매도 체결\n", ticker, EA)
+		fmt.Printf("%s 코인 %s개 시장가로 매도 체결!\n", ticker, each)
 	} else {
 		fmt.Println("-------시장가 매도 실패-------")
 		fmt.Printf("Status Code : %s \n%s\n", marketSelling.Status, marketSelling.Message)

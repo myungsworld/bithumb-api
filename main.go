@@ -3,18 +3,24 @@ package main
 import (
 	"fmt"
 	"myungsworld/api/bithumb/Info"
+	Execute "myungsworld/api/bithumb/transaction"
 	"myungsworld/database"
 	"strconv"
+	"sync"
 	"time"
 )
+
+var wait = sync.WaitGroup{}
+
 
 func main() {
 
 	database.ConnectDB()
 
-	done := make(chan bool, 100)
+	loop := make(chan bool, 1)
 
-	var transaction int
+	var sellTransaction int
+	var buyTransaction int
 	var seconds int
 	var startPriceEveryTenMin float64
 	var marketPrice float64
@@ -24,16 +30,28 @@ func main() {
 
 		for true {
 
+			if buyTransaction == 1 {
+
+				wait.Add(1)
+				fmt.Println("과연연")
+				time.Sleep(time.Second*10)
+				fmt.Println("역시는역시")
+				wait.Done()
+
+
+			}
+
 			BTTMarketPrice := Info.CoinMarketCondition("BTT")
 			startPriceEveryTenMin, _ = strconv.ParseFloat(BTTMarketPrice, 64)
 
 			for true {
 				time.Sleep(time.Second * 1)
 
-				// 30분 주기로 초기화
+				// 10분 주기로 초기화
 				seconds++
-				if seconds == 20 {
-					transaction = 0
+				if seconds == 600 {
+					sellTransaction = 0
+					buyTransaction = 0
 					seconds = 0
 					startPriceEveryTenMin = 0
 					marketPrice = 0
@@ -54,26 +72,30 @@ func main() {
 				fluctateRate := ((marketPrice - startPriceEveryTenMin) / marketPrice) * 100
 
 				fmt.Println("시작가 :", startPriceEveryTenMin, "현재가 :", marketPrice, "고가 :", highPrice)
-				fmt.Println("변동률:", fluctateRate)
-				fmt.Println(seconds,"초")
+				fmt.Println("변동률:", fluctateRate, " ", seconds, "초")
 
-				// 30분안에 -7% 이상 떨어지면 50퍼 매도 + 시작가 변경
-				if transaction == 0 && fluctateRate < -7 {
-					transaction++
-					done <- true
+				// 10분안에 -3% 이상 떨어지면 50퍼 매도
+				if fluctateRate < -3 && sellTransaction == 0 {
+					balance := Info.GetMyTickerBalance("BTT")
+					balance = balance / 2
+					Execute.MarketSell("BTT", balance)
+					sellTransaction++
 				}
 
-				if BTTMarketPrice < "4" {
-					done <- true
-
+				// 10분안에 3% 이상 오를시 ~원 매수 + 변동률 보면서 대기
+				if fluctateRate > 0.01 && buyTransaction == 0 {
+					availableKRW := Info.GetBalance("ALL")
+					fmt.Println("availableKRW : ", availableKRW)
+					buyTransaction++
+					break
 				}
+
 			}
 		}
 	}()
 
-	for i := 0; i < 3; i++ {
-		<-done
-		fmt.Println("아항")
+	for i := 0; i < 1; i++ {
+		<-loop
 	}
 
 	//Info.GetBalance("ALL")

@@ -38,7 +38,7 @@ func ConnectDB(){
 func createTables() {
 	tables := []interface{}{
 		(*models.Test)(nil),
-		(*models.LimJoongSubTalMo)(nil),
+
 
 	}
 

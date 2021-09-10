@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"myungsworld/middlewares"
-	"os"
 	"time"
 )
 
@@ -41,7 +40,7 @@ type Account struct {
 	Data   AccountRec `json:"data"`
 }
 
-func GetMyTickerBalance(orderCurrency string) {
+func GetMyTickerBalance(orderCurrency string) float64 {
 
 	const ENDPOINT = "/info/account"
 	const PARAMS = "order_currency=BTC&payment_currency=KRW"
@@ -54,12 +53,12 @@ func GetMyTickerBalance(orderCurrency string) {
 		panic(err)
 	}
 
-	fmt.Printf("- Status Code: %s\n", accountJsonRecInfo.Status)
-	fmt.Printf("- Created: %d\n", accountJsonRecInfo.Data.Created)
-	fmt.Printf("- Account ID: %s\n", accountJsonRecInfo.Data.AccountId)
-	fmt.Printf("- Trade Fee: %.4f\n", accountJsonRecInfo.Data.TradeFee)
-	fmt.Printf("- Balance: %.8f\n", accountJsonRecInfo.Data.Balance)
+	//fmt.Printf("- Status Code: %s\n", accountJsonRecInfo.Status)
+	//fmt.Printf("- Created: %d\n", accountJsonRecInfo.Data.Created)
+	//fmt.Printf("- Account ID: %s\n", accountJsonRecInfo.Data.AccountId)
+	//fmt.Printf("- Trade Fee: %.4f\n", accountJsonRecInfo.Data.TradeFee)
+	//fmt.Printf("- Balance: %.8f\n", accountJsonRecInfo.Data.Balance)
 
-	os.Exit(0)
+	return accountJsonRecInfo.Data.Balance
 
 }
