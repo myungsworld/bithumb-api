@@ -2,7 +2,7 @@ package main
 
 import (
 	"myungsworld/database"
-	"myungsworld/handlers"
+	"myungsworld/queue"
 )
 
 func main() {
@@ -11,7 +11,11 @@ func main() {
 
 	loop := make(chan bool, 1)
 
-	go Handler.BTT()
+	//go Handler.BTT()
+	go Queue.Coin("BTT")
+	//go Queue.Coin("ETH")
+	//go Queue.Coin("BTT")
+
 
 	for i := 0; i < 1; i++ {
 		<-loop

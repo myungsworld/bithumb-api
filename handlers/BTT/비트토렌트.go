@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 )
+
 func BTT() {
 
 	var wait = sync.WaitGroup{}
@@ -26,12 +27,10 @@ func BTT() {
 
 			// transaction stuff
 
-
 			// database stuff
 
-
 			fmt.Println("이것첫번째 10초 짜리")
-			time.Sleep(time.Second*10)
+			time.Sleep(time.Second * 10)
 			fmt.Println("역시는역시")
 			wait.Done()
 			sellTransaction = 0
@@ -86,7 +85,6 @@ func BTT() {
 
 				// database stuff
 
-
 			}
 
 			// 10분안에 3% 이상 오를시 ~원 매수 + 대기열로 전환 + 메세지
@@ -104,4 +102,3 @@ func BTT() {
 		}
 	}
 }
-
