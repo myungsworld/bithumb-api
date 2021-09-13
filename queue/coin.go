@@ -5,6 +5,7 @@ import (
 	"myungsworld/api/bithumb/Info"
 	"myungsworld/database"
 	"myungsworld/database/models"
+	"myungsworld/queue/Soaring"
 	"strconv"
 	"time"
 )
@@ -49,7 +50,7 @@ func Coin(ticker string) {
 			fmt.Println("변동률:", fluctateRate, " ", seconds, "초")
 
 			// 폭락 방지 함수
-			// 10분안에 -3% 이상 떨어지면 50퍼 매도 + 대기열로 전환 + 메세지
+			// 10분안에 -3% 이상 떨어지면 50퍼 매도 + 두번째 대기열로 전환 + 메세지
 			// 대기열 진입후 10분 더 지켜보다가 -5퍼 이상 떨어지면 남은 코인의 절반 더 매도
 			if fluctateRate < -3 {
 
@@ -80,13 +81,33 @@ func Coin(ticker string) {
 
 			}
 			// 폭등 감지 함수
-			// 10분안에 3% 이상 오를시 ~원 매수 + 대기열로 전환 + 메세지
+			// 10분안에 3% 이상 오를시 50000원 매수 + 두번째 대기열로 전환 + 메세지
 			if fluctateRate > 3 {
-				availableKRW := Info.GetBalance("ALL")
-				fmt.Println("availableKRW : ", availableKRW)
 
-				//// 잔고가 만원 이하일시
-				//if availableKRW
+				//정보 수집
+				info := models.Information{
+					Ticker: ticker,
+					Content: fmt.Sprintf(
+						"%d초 3퍼센트 상승 (시작가 : %.6f 현재가 : %.6f)",
+						seconds,
+						startPriceEveryTenMin,
+						marketPrice,
+					),
+					CreatedAt: time.Now(),
+				}
+				if err := database.DB.Create(&info).Error; err != nil {
+					panic(err)
+				}
+
+				// 매수할 돈이 부족할시
+				availableKRW := Info.GetBalance(ticker)
+				if availableKRW < 50000 {
+					break
+				}
+
+				//매수시작(코인 티커, 한화 수량,
+				Soaring.BreakForSoared(ticker, 50000, marketPrice, startPriceEveryTenMin, fluctateRate, seconds)
+				break
 			}
 
 		}

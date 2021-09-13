@@ -13,7 +13,7 @@ type MarketBuying struct {
 }
 
 // EA : each
-func MarKetBuy(ticker, EA string) {
+func MarKetBuy(ticker, EA string) (string, string) {
 	const ENDPOINT = "/trade/market_buy"
 	const PARAMS = "order_currency=주문통화&payment_currency=KRW&units=주문금액"
 
@@ -30,4 +30,6 @@ func MarKetBuy(ticker, EA string) {
 		fmt.Println("-------시장가 매수 실패-------")
 		fmt.Printf("Status Code : %s \n%s\n", marketBuying.Status, marketBuying.Message)
 	}
+
+	return marketBuying.Status, marketBuying.Message
 }

@@ -12,18 +12,22 @@ type MarketSelling struct {
 	Message string `json:"message"`
 }
 
-func MarketSell(ticker string, EA float64) string {
+//EA 는 코인의 물량임
+func MarketSell(ticker string, EA float64) (string, string, string) {
 	const ENDPOINT = "/trade/market_sell"
 	const PARAMS = "order_currency=주문통화&payment_currency=KRW&units=코인갯수"
 
+	each := ""
 	//ToDo: 이거좀 나눠야됨 티커별로
-	each := fmt.Sprintf("%.4f", EA)
+	if ticker == "BTT" {
+		each = fmt.Sprintf("%.4f", EA)
+	}
 
 	params := fmt.Sprintf("order_currency=%s&payment_currency=KRW&units=%s", ticker, each)
 	respData := Middlewares.Call(ENDPOINT, params)
 
 	marketSelling := MarketSelling{}
-	if err := json.Unmarshal(respData,&marketSelling); err != nil {
+	if err := json.Unmarshal(respData, &marketSelling); err != nil {
 		panic(err)
 	}
 
@@ -34,5 +38,5 @@ func MarketSell(ticker string, EA float64) string {
 		fmt.Printf("Status Code : %s \n%s\n", marketSelling.Status, marketSelling.Message)
 	}
 
-	return each
+	return marketSelling.Status, marketSelling.Message, each
 }
