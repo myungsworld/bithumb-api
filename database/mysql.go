@@ -9,13 +9,12 @@ import (
 
 var DB *gorm.DB
 
-
 const User = "root"
 const Password = ""
 const LocalHost = "127.0.0.1:3306"
 const DBName = "myungsworld"
 
-func ConnectDB(){
+func ConnectDB() {
 
 	var err error
 
@@ -24,7 +23,7 @@ func ConnectDB(){
 		Password,
 		LocalHost,
 		DBName,
-		)
+	)
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println(err)
@@ -39,7 +38,7 @@ func createTables() {
 	tables := []interface{}{
 		(*models.Test)(nil),
 		(*models.Transaction)(nil),
-
+		(*models.Information)(nil),
 	}
 
 	if err := DB.AutoMigrate(tables...); err != nil {
@@ -47,4 +46,3 @@ func createTables() {
 		panic(err)
 	}
 }
-
