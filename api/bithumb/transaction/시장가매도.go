@@ -22,7 +22,7 @@ func MarketSell(ticker string, EA float64) (string, string, string) {
 	if ticker == "BTT" {
 		each = fmt.Sprintf("%.4f", EA)
 	} else {
-		each = fmt.Sprintf("%.8f", EA)
+		each = fmt.Sprintf("%.4f", EA)
 	}
 
 	params := fmt.Sprintf("order_currency=%s&payment_currency=KRW&units=%s", ticker, each)
