@@ -145,6 +145,9 @@ func SellingTiming(ticker string, startPrice float64, each float64) {
 				if err := database.DB.Create(&transaction).Error; err != nil {
 					panic(err)
 				}
+
+				fmt.Println()
+
 			} else {
 				info := models.Information{
 					Ticker:    ticker,

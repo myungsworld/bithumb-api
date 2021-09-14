@@ -1,4 +1,4 @@
-package Queue
+package Crashing
 
 import (
 	"fmt"
@@ -12,6 +12,8 @@ import (
 )
 
 func BreakForCrashed(ticker string, startPriceEveryTenMin float64, marketPrice float64, seconds int, fluctateRate float64) {
+
+	fmt.Println(ticker , "Break For Crashed 진입")
 
 	var wait = sync.WaitGroup{}
 
