@@ -42,7 +42,6 @@ func Start(ticker string) {
 			tickerMarketPrice := Info.CoinMarketCondition(ticker)
 			marketPrice, _ = strconv.ParseFloat(tickerMarketPrice, 64)
 
-
 			fluctateRate := ((marketPrice - startPriceEveryTenMin) / marketPrice) * 100
 
 			fmt.Println(ticker, "변동률", fluctateRate)
@@ -56,7 +55,7 @@ func Start(ticker string) {
 				info := models.Information{
 					Ticker: ticker,
 					Content: fmt.Sprintf(
-						"%d초 -3퍼센트 하락 (시작가 : %.6f 현재가 : %.6f)",
+						"%d초 -3퍼센트 하락 (시작가 : %.8f 현재가 : %.8f)",
 						seconds,
 						startPriceEveryTenMin,
 						marketPrice,
@@ -86,7 +85,7 @@ func Start(ticker string) {
 				info := models.Information{
 					Ticker: ticker,
 					Content: fmt.Sprintf(
-						"%d초 3퍼센트 상승 (시작가 : %.6f 현재가 : %.6f)",
+						"%d초 3퍼센트 상승 (시작가 : %.8f 현재가 : %.8f)",
 						seconds,
 						startPriceEveryTenMin,
 						marketPrice,

@@ -5,23 +5,23 @@ import (
 	"myungsworld/queue"
 )
 
-const (
-	BTT = "BTT"
-
-)
-
 func main() {
 
 	database.ConnectDB()
 
 	loop := make(chan bool, 1)
 
-	go Queue.Coin("BTT")
-	go Queue.Coin("LTC")
-	go Queue.Coin("ADA")
-	go Queue.Coin("ASM")
-	go Queue.Coin("XEC")
-	go Queue.Coin("XLM")
+	tickers := []string{
+		"XEC", "FIT", "DAC", "AMO", "TMTG",
+		"CON", "MIX", "BTT", "EGG", "EM",
+		"HIBS", "TEMCO", "EL", "OBSR", "XPR",
+		"XPR", "WIKEN", "BASIC", "GOM2", "MBL",
+		"FLETA", "QTCON", "TRV", "CKB", "AWO",
+	}
+
+	for _, ticker := range tickers {
+		go Queue.Coin(ticker)
+	}
 
 	for i := 0; i < 1; i++ {
 		<-loop
