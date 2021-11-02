@@ -1,4 +1,4 @@
-## 빗썸 open api 활용 , 자동매매 프로그램(BackEnd) 장진경 ver 1.2
+## 빗썸 open api 활용 , 자동매매 프로그램(BackEnd)
 
 ### 기획
 
