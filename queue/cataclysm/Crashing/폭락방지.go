@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func BreakForCrashed(ticker string, startPriceEveryTenMin float64, marketPrice float64, seconds int, fluctateRate float64, cycle int) {
+func BreakForCrashed(ticker string, startPriceEveryTenMin float64, marketPrice float64, seconds int, fluctateRate float64, cycle int, percentSecondCrashing float64) {
 
 	fmt.Println(ticker, "Break For Crashed 진입")
 
@@ -60,7 +60,7 @@ func BreakForCrashed(ticker string, startPriceEveryTenMin float64, marketPrice f
 			fluctateRate2 := ((marketPrice - startPriceEveryTenMin) / marketPrice) * 100
 
 			// 총 20분 모니터링 동안 -5퍼가 떨어지면 남은것의 절반을 더 매도
-			if fluctateRate2 < -5 {
+			if fluctateRate2 < percentSecondCrashing {
 				balance2 := Info.GetMyTickerBalance(ticker)
 				if balance2 <= 0 {
 					break
@@ -79,7 +79,7 @@ func BreakForCrashed(ticker string, startPriceEveryTenMin float64, marketPrice f
 							MarketPrice: marketPrice,
 							Fluctate:    fluctateRate2,
 							Seconds:     newSeconds,
-							Content:     "-5퍼",
+							Content:     fmt.Sprintf("%f퍼", percentSecondCrashing),
 							CreatedAt:   time.Now(),
 						}
 

@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func Start(ticker string, cycle int, percentCrashing float64) {
+func Start(ticker string, cycle int, percentCrashing, percentSecondCrashing float64) {
 
 	var seconds int
 	var startPriceEveryTenMin float64
@@ -73,7 +73,7 @@ func Start(ticker string, cycle int, percentCrashing float64) {
 				}
 
 				// 매도 시작
-				Crashing.BreakForCrashed(ticker, startPriceEveryTenMin, marketPrice, seconds, fluctateRate, cycle)
+				Crashing.BreakForCrashed(ticker, startPriceEveryTenMin, marketPrice, seconds, fluctateRate, cycle, percentSecondCrashing)
 				break
 
 			}
