@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func BreakForCrashed(ticker string, startPriceEveryTenMin float64, marketPrice float64, seconds int, fluctateRate float64) {
+func BreakForCrashed(ticker string, startPriceEveryTenMin float64, marketPrice float64, seconds int, fluctateRate float64, cycle int) {
 
 	fmt.Println(ticker, "Break For Crashed 진입")
 
@@ -51,7 +51,7 @@ func BreakForCrashed(ticker string, startPriceEveryTenMin float64, marketPrice f
 		for true {
 			time.Sleep(time.Second * 1)
 			newSeconds++
-			if newSeconds >= 600 {
+			if newSeconds >= cycle {
 				break
 			}
 
