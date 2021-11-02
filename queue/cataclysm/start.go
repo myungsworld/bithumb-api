@@ -29,7 +29,7 @@ func Start(ticker string,cycle int , percentCrashing float64) {
 		for true {
 			time.Sleep(time.Second * 1)
 
-			// cycle초 주기로 초기화
+			// cycle 주기로 초기화
 			seconds++
 			if seconds == cycle {
 				seconds = 0
@@ -47,7 +47,7 @@ func Start(ticker string,cycle int , percentCrashing float64) {
 			fmt.Println(ticker, "변동률", fluctateRate)
 
 			// 폭락 방지 함수
-			// cycle 초 안에 percentCrashing% 이상 떨어지면 50퍼 매도 + 두번째 대기열로 전환 + 메세지
+			// cycle 안에 percentCrashing 이상 떨어지면 50퍼 매도 + 두번째 대기열로 전환 + 메세지
 			// 대기열 진입후 10분 더 지켜보다가 -5퍼 이상 떨어지면 남은 코인의 절반 더 매도
 			if fluctateRate < percentCrashing {
 
