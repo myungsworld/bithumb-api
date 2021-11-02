@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func BreakForCrashed(ticker string, startPriceEveryTenMin float64, marketPrice float64, seconds int, fluctateRate float64, cycle int, percentSecondCrashing float64) {
+func BreakForCrashed(ticker string, startPriceEveryTenMin float64, marketPrice float64, seconds int, fluctateRate float64, basicCycle int, percentSecondCrashing float64, crashedCycle int) {
 
 	fmt.Println(ticker, "Break For Crashed 진입")
 
@@ -46,12 +46,12 @@ func BreakForCrashed(ticker string, startPriceEveryTenMin float64, marketPrice f
 
 		// SNS stuff
 
-		// 10분동안 더 떨어지면 더 팜
+		// crashedCycle 동안 더 떨어지면 더 팜
 		newSeconds := 0
 		for true {
 			time.Sleep(time.Second * 1)
 			newSeconds++
-			if newSeconds >= cycle {
+			if newSeconds >= crashedCycle {
 				break
 			}
 

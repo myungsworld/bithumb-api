@@ -9,14 +9,12 @@ import (
 	"time"
 )
 
-func BreakForSoared(ticker string, krw, marketPrice, startPrice, fluctate float64, seconds int) {
+func BreakForSoared(ticker string, krw, marketPrice, startPrice, fluctate float64, seconds int, percentFirstSell, percentSecondSell, percentLastSell float64, soaringCycle int) {
 	var wait = sync.WaitGroup{}
 	wait.Add(1)
 
 	each := krw / marketPrice
-
-	// Todo: %.4f는 BTT기준임
-	EA := fmt.Sprintf("%.8f", each)
+	EA := fmt.Sprintf("%.4f", each)
 
 	status, message := Execute.MarKetBuy(ticker, EA)
 
@@ -40,7 +38,7 @@ func BreakForSoared(ticker string, krw, marketPrice, startPrice, fluctate float6
 		}
 
 		// 매수 이후 두번째 대기열
-		SellingTiming(ticker, marketPrice, each)
+		SellingTiming(ticker, marketPrice, each, percentFirstSell, percentSecondSell, percentLastSell, soaringCycle)
 
 	} else {
 		info := models.Information{

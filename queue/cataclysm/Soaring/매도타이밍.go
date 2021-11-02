@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func SellingTiming(ticker string, startPrice float64, each float64) {
+func SellingTiming(ticker string, startPrice float64, each float64, percentFirstSell, percentSecondSell, percentLastSell float64, soaringCycle int) {
 	var wait = sync.WaitGroup{}
 	wait.Add(1)
 
@@ -24,7 +24,7 @@ func SellingTiming(ticker string, startPrice float64, each float64) {
 
 		seconds++
 
-		if seconds == 1200 {
+		if seconds == soaringCycle {
 			break
 		}
 
@@ -36,7 +36,7 @@ func SellingTiming(ticker string, startPrice float64, each float64) {
 		fmt.Println("시작가 :", startPrice, "현재가 :", marketPrice)
 		fmt.Println("변동률:", fluctateRate, " ", seconds, "초")
 
-		if fluctateRate > 10 && firstSell == false {
+		if fluctateRate > percentFirstSell && firstSell == false {
 			amount := each / 5
 			status, message, EA := Execute.MarketSell(ticker, amount)
 
@@ -80,7 +80,7 @@ func SellingTiming(ticker string, startPrice float64, each float64) {
 
 		}
 
-		if fluctateRate > 20 && SecondSell == false {
+		if fluctateRate > percentSecondSell && SecondSell == false {
 			amount := each / 5
 			amount *= 2
 			status, message, EA := Execute.MarketSell(ticker, amount)
@@ -125,8 +125,9 @@ func SellingTiming(ticker string, startPrice float64, each float64) {
 
 		}
 
-		if fluctateRate > 30 && LastSell == false {
+		if fluctateRate > percentLastSell && LastSell == false {
 			balance := Info.GetMyTickerBalance(ticker)
+			balance = balance - 0.00005
 			status, message, EA := Execute.MarketSell(ticker, balance)
 
 			if status == "0000" {
@@ -170,6 +171,9 @@ func SellingTiming(ticker string, startPrice float64, each float64) {
 
 		// 30퍼까지 다 팔았으면 대기열 해제
 		if firstSell == true && SecondSell == true && LastSell == true {
+
+			// 한시간 자고
+			time.Sleep(time.Second * 3600)
 			break
 		}
 

@@ -17,13 +17,9 @@ func MarketSell(ticker string, EA float64) (string, string, string) {
 	const ENDPOINT = "/trade/market_sell"
 	const PARAMS = "order_currency=주문통화&payment_currency=KRW&units=코인갯수"
 
-	each := ""
-	//ToDo: 이거좀 나눠야됨 티커별로
-	if ticker == "BTT" {
-		each = fmt.Sprintf("%.4f", EA)
-	} else {
-		each = fmt.Sprintf("%.4f", EA)
-	}
+	// 소수점 4자리까지만 지원됨 고로 BTC ,ETH 등 덩치가 큰건 지금 알고리즘과 맞지않음
+	//EA = math.Floor(EA)
+	each := fmt.Sprintf("%.4f", EA)
 
 	params := fmt.Sprintf("order_currency=%s&payment_currency=KRW&units=%s", ticker, each)
 	respData := Middlewares.Call(ENDPOINT, params)

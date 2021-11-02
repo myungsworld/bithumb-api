@@ -11,7 +11,10 @@ import (
 	"time"
 )
 
-func Start(ticker string, cycle int, percentCrashing, percentSecondCrashing float64) {
+func Start(
+	ticker string, basicCycle int,
+	percentCrashing, percentSecondCrashing float64, crashedCycle int,
+	percentSoaring, percentFirstSell, percentSecondSell, percentLastSell float64, soaringCycle int) {
 
 	var seconds int
 	var startPriceEveryTenMin float64
@@ -31,7 +34,7 @@ func Start(ticker string, cycle int, percentCrashing, percentSecondCrashing floa
 
 			// cycle 주기로 초기화
 			seconds++
-			if seconds == cycle {
+			if seconds == basicCycle {
 				seconds = 0
 				startPriceEveryTenMin = 0
 				marketPrice = 0
@@ -55,8 +58,9 @@ func Start(ticker string, cycle int, percentCrashing, percentSecondCrashing floa
 				info := models.Information{
 					Ticker: ticker,
 					Content: fmt.Sprintf(
-						"%d초 -3퍼센트 하락 (시작가 : %.8f 현재가 : %.8f)",
+						"%d초 %f퍼센트 하락 (시작가 : %.4f 현재가 : %.4f)",
 						seconds,
+						percentSecondCrashing,
 						startPriceEveryTenMin,
 						marketPrice,
 					),
@@ -73,20 +77,21 @@ func Start(ticker string, cycle int, percentCrashing, percentSecondCrashing floa
 				}
 
 				// 매도 시작
-				Crashing.BreakForCrashed(ticker, startPriceEveryTenMin, marketPrice, seconds, fluctateRate, cycle, percentSecondCrashing)
+				Crashing.BreakForCrashed(ticker, startPriceEveryTenMin, marketPrice, seconds, fluctateRate, basicCycle, percentSecondCrashing, crashedCycle)
 				break
 
 			}
 			// 폭등 감지 함수
 			// 10분안에 3% 이상 오를시 50000원 매수 + 두번째 대기열로 전환 + 메세지
-			if fluctateRate > 3 {
+			if fluctateRate > percentSoaring {
 
 				//정보 수집
 				info := models.Information{
 					Ticker: ticker,
 					Content: fmt.Sprintf(
-						"%d초 3퍼센트 상승 (시작가 : %.8f 현재가 : %.8f)",
+						"%d초 %f퍼센트 상승 (시작가 : %.4f 현재가 : %.4f)",
 						seconds,
+						percentSoaring,
 						startPriceEveryTenMin,
 						marketPrice,
 					),
@@ -103,7 +108,7 @@ func Start(ticker string, cycle int, percentCrashing, percentSecondCrashing floa
 				}
 
 				//매수시작(코인 티커, 한화 수량, 시장가, 시작가, 변동률, 걸린시간)
-				Soaring.BreakForSoared(ticker, 50000, marketPrice, startPriceEveryTenMin, fluctateRate, seconds)
+				Soaring.BreakForSoared(ticker, 50000, marketPrice, startPriceEveryTenMin, fluctateRate, seconds, percentFirstSell, percentSecondSell, percentLastSell, soaringCycle)
 				break
 			}
 
