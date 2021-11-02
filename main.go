@@ -2,8 +2,15 @@ package main
 
 import (
 	"myungsworld/database"
-	"myungsworld/queue"
+	Queue "myungsworld/queue"
 )
+
+// Ticker : 코인티커 , Cycle : 회복주기 , PercentCrashing : 폭락방지 한계 퍼센트
+type Config struct {
+	Ticker          string
+	Cycle           int
+	PercentCrashing float64
+}
 
 func main() {
 
@@ -11,16 +18,16 @@ func main() {
 
 	loop := make(chan bool, 1)
 
-	tickers := []string{
-		"XEC", "FIT", "DAC", "AMO", "TMTG",
-		"CON", "MIX", "BTT", "EGG", "EM",
-		"HIBS", "TEMCO", "EL", "OBSR", "XPR",
-		"XPR", "WIKEN", "BASIC", "GOM2", "MBL",
-		"FLETA", "QTCON", "TRV", "CKB", "AWO",
-	}
+	list := make([]Config, 0)
+	list = append(list,
+		Config{
+			Ticker: "BTT", Cycle: 600, PercentCrashing: -3,
+		}, Config{
+			Ticker: "MIX", Cycle: 600, PercentCrashing: -3,
+		})
 
-	for _, ticker := range tickers {
-		go Queue.Coin(ticker)
+	for _, config := range list {
+		go Queue.Coin(config.Ticker, config.Cycle, config.PercentCrashing)
 	}
 
 	for i := 0; i < 1; i++ {

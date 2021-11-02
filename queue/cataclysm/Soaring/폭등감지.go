@@ -15,6 +15,7 @@ func BreakForSoared(ticker string, krw, marketPrice, startPrice, fluctate float6
 
 	each := krw / marketPrice
 
+	// Todo: %.4f는 BTT기준임
 	EA := fmt.Sprintf("%.4f", each)
 
 	status, message := Execute.MarKetBuy(ticker, EA)

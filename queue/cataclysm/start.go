@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func Start(ticker string) {
+func Start(ticker string,cycle int , percentCrashing float64) {
 
 	var seconds int
 	var startPriceEveryTenMin float64
@@ -29,9 +29,9 @@ func Start(ticker string) {
 		for true {
 			time.Sleep(time.Second * 1)
 
-			// 10분 주기로 초기화
+			// cycle초 주기로 초기화
 			seconds++
-			if seconds == 600 {
+			if seconds == cycle {
 				seconds = 0
 				startPriceEveryTenMin = 0
 				marketPrice = 0
@@ -47,9 +47,9 @@ func Start(ticker string) {
 			fmt.Println(ticker, "변동률", fluctateRate)
 
 			// 폭락 방지 함수
-			// 10분안에 -3% 이상 떨어지면 50퍼 매도 + 두번째 대기열로 전환 + 메세지
+			// cycle 초 안에 percentCrashing% 이상 떨어지면 50퍼 매도 + 두번째 대기열로 전환 + 메세지
 			// 대기열 진입후 10분 더 지켜보다가 -5퍼 이상 떨어지면 남은 코인의 절반 더 매도
-			if fluctateRate < -3 {
+			if fluctateRate < percentCrashing {
 
 				//정보 수집
 				info := models.Information{
